@@ -1,0 +1,75 @@
+performans testi bir uygulamanın belli bir yuk karsısında verdiği tepkidir.
+
+ilk olarak apache jmeter windows dosyasını indir. İndirilen dosyayı klasor seklinde cıkar ve bin dosyası içinde projeyi ac
+ondan sonra firefox ag ayarlarına git. ag portlarını 127.0.0.1 ve 8888 ayarla. sertifikalrı göster de ve jmeter actığımız jarı import et sertifikaya.
+test planı altına add-threads-thread group ekle. orda kac kullanıcı,kac saniyede, kac loopta girilecekse sayılar yerine 
+degisken isimleri tanımla. ${users}-${saniye}-${loops} gibi. Daha sonra bu değişkenler için test planı altında bu değiskenlere sayı ata
+ADD-CONFİQELEMENT-USER DEFİNED VARİABLES şeklinde. users,saniye,loops değşken isimleri ile degerler burda atanırsa daha dinamik olacaktır.
+
+şöyle bir durum var threadgroups altına ADD-SAMPLER-HTTP REQUEST yazılarak hard olarak site falan uzantısı / seklinde yazılabilir.
+Fakat biz söyle yaparız.
+
+Thread üzerinde ADD-LOGİC CONTROLLER-RECORDİNG CONTROLLER Daha sonra test planımız üzerinde ADD-NON-TEST ELEMENTS-HTTPS TESTSCRİP-RECORD YAPARIZ
+Https test script recorder üzerinde portumuzu firefox a uyumlu yapmak için 8888 yaparız.Yine bu alanda start yapmadan önce
+filtreleme yaparız. Request-Filtering kısmına tıklayıp exclude alanında add suggested exclude a tıklayarak. istersek
+bu alana daha fazla fitre ekleyebiliriz. bunu yapmamızın sebebi. sitede de gezinti yaptıktan sonra işimize yarayan linkleri alıp
+bunları isimlendirip thread gruba surukleyip bunlar üzerinden yük verme işlemlerimize devam etmektir.
+Daha sonra işimize yarayanları isimlendirdikten sonra recording conrollerı temizleriz.
+
+şimdi sitede gezinti yapalım https test script recorder uzerinde start deriz. firefox a gidip işlem yapmak istediğimiz sitelere gideriz.
+daha sonra recording conroller uzerinde ismlendirme yapıp işimize yaramayanları sileriz. digerlerini thread groupa kopyalarız.
+Sonra isimlendridiğimiz değişkenlere istediğimiz raporları ekleriz. Misal Anasayfa üzerinde ADD-LİSTENERS-VİEW RESULTS TREE
+raporunu ekledim diğer isimlendirdiğimiz sitelerde de aynı şekilde rapor ekleriz. su anda calıştırsak yuk verebiliriz.
+raporlama kısmından ayrıntıları öğrenebiliriz. ama yukarıda sadece gezindiğimiz sitelerde yük verdik.
+şimdi sitemizde değişkenler oluşturarak rasgele ürüne yuk verelim.
+
+şimdi farklı iki şekilde yük vereceğiz. ilk olandan baslayalım.
+
+test planı uzerinde ADD-POST PROCESSORS-CSS CELECTOR oluşturlım. name kısmına random isminde değişken oluşturalım.
+butun linkleri veren css locator bulalım. "ornek [class='rush-component']>a" a tagi ile bitecek sekilde bulalım. atribute degerine ise linkin
+attribute degerini yazalım xml DOM da. genel href olur.Macth no kısmına 0 yazarsak rasgele olur.
+**şimdi tanımladığımız. yani sectiğimiz urunun rasgele olması için urunun 'path' kısmına oluşturmuş olduğumuz ${random} değişkenini yazalım.
+mantığı o locatorlardan herhangi birine yuk veririz. 
+O linkler üzerinde rasgele secim yapıp yapmagımızın konrolunu tree raporumuza gelelim. request kısımları farklıysa o linklerin
+herhangi birine yuk vermişizdir.
+
+şimdi gelelim ikinci kısım yuk vermeye.
+
+ilk olarak not defteri yada baska bir text acıp. aramak istediğimiz urunleri yazalım. misal textil,tablet,bilgisyar...
+text uzantımızı 'csv' yapalım. masaustunde kalsın. bosluk olmasın arasında.
+daha sonra bu texti kullanmak için test planı uzerinde ADD-CONFİQ ELEMENTS -CSV VERİ KÜMESİ AYARI oluşturlım.
+dosya adı kısmına sorgulamamızı istediğimiz. csv uzantılı text yolunu ekleyelim. değisken isimleri yerine textin içindekileri
+sorgulamamız için bir değiken ismi verelim 'ara' diyebiliriz. tableti aradğımız link kısmında bu tanımladığımız ${ara}
+deişkenini tablet yerine yazdığımızda rasgele textteki urunlerden birini aratıp. rasgele linke tıklar.
+
+Assertionlar kolay. sadece urunumuzun sorgulayıp sorgulamadığını kontrol için tanımladığımız link uzerinde
+ADD-ASSERTİONS-RESBONSE yada siz nasıl bir sorgulama yapmak istiyorsanız duration,size seceriz. resbonse degeri misal
+200 veya resbonse name OK gibi nasıl yapmak istiyorsak dogru deger vermezsen test gecmez.
+
+
+
+RAPORLAMA İÇİN
+
+csv olarak raporu masaustune indir. onu da raporun uzerinde brows ile kaydedecegın yeri sec. csv iolarak yol görulecek
+ama daha kaydetmedi. testi yeniden calıştır. masaüstüne iner. excelde düzenleme için. wiev raporu için masaustundeki dosyayı excelde ac.
+ilk sutunun hepsini sec. veri alanına tıkla. Metni sutunlara dönüştür. sınırlandırılmiş alana tik at. ileri de virgül kısmına tik at tamam de.
+
+html raporlamada yapılabiliyor.
+
+bir bos sonuc klasor oluştur. indirmiş olduğımuz '.jmx' uzantılı dosyayı kes jmeter bin dosyasının içine kopyala. path yolunun bulunduğu alana cmd yaz klasöre gir.
+daha sonra su komutu yaz alana jmeter -n -t abc.jmx -l (bos klasörün pathini kopyala)/sonuc.csv -e -o (bos klasörün pathini kopyala) daha sonra enter de
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
